@@ -10,9 +10,14 @@ import org.springframework.stereotype.Component;
 public class MessageConsumer {
 	private Logger log = LoggerFactory.getLogger(MessageConsumer.class);
 
-	@KafkaListener(topics = "${myapp.kafka.topic}", groupId = "xyz")
+	@KafkaListener(topics = "${myapp.kafka.topic}", 
+			groupId = "xyz",
+			containerFactory = "customKafkaListenerContainerFactory"
+			)
 	public void consume(String message) {
 		log.info("MESSAGE recieved -> " + message);
 		// messageRepo.addMessage(message);
 	}
+	
+	
 }
