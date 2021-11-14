@@ -2,25 +2,33 @@ package pk.com.kfexample.kfkalearn.service;
 
 public class SystemData {
 	private String systemName;
-	private Integer startOffset;
-	private Integer endOffset;
+	private String topicName;
+	private long startOffset;
+	private long endOffset;
+	
+	
 	public String getSystemName() {
 		return systemName;
 	}
 	public void setSystemName(String systemName) {
 		this.systemName = systemName;
 	}
-	public Integer getStartOffset() {
+	public long getStartOffset() {
 		return startOffset;
 	}
-	public void setStartOffset(Integer startOffset) {
+	public void setStartOffset(long startOffset) {
 		this.startOffset = startOffset;
 	}
-	public Integer getEndOffset() {
+	public long getEndOffset() {
 		return endOffset;
 	}
-	public void setEndOffset(Integer endOffset) {
-		this.endOffset = endOffset;
+	public void setEndOffset(long m2) {
+		this.endOffset = m2;
+	}
+	@Override
+	public String toString() {
+		return "SystemData [systemName=" + systemName + ", startOffset=" + startOffset + ", endOffset=" + endOffset
+				+ "]";
 	}
 	
 }

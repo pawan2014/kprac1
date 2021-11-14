@@ -20,5 +20,9 @@ public class MonitorMetaData {
 	public void setSystemData(SystemData systemData) {
 		this.systemData = systemData;
 	}
+	@Override
+	public String toString() {
+		return "MonitorMetaData [groupid=" + groupid + ", systemData=" + systemData + "]";
+	}
 	
 }

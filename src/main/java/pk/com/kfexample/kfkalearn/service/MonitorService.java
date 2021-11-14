@@ -9,12 +9,12 @@ public class MonitorService {
 
 	HashMap<String,MonitorMetaData> m = new HashMap();
 	
-	public MonitorMetaData update(String groupid, String systemName, Integer startoffset, Integer endoffset) {
+	public MonitorMetaData update(String groupid, String systemName, long l, long m2) {
 		MonitorMetaData data=null ;
 		if(m.containsKey(groupid)) {
 			// only update the end offset
 			data = m.get(groupid);
-			data.getSystemData().setEndOffset(endoffset);
+			data.getSystemData().setEndOffset(m2);
 			m.put(groupid, data);
 		}else {
 			// add as a new entry
@@ -23,8 +23,8 @@ public class MonitorService {
 			//
 			SystemData systemData = new SystemData();
 			systemData.setSystemName(systemName);
-			systemData.setStartOffset(startoffset);
-			systemData.setEndOffset(endoffset);
+			systemData.setStartOffset(l);
+			systemData.setEndOffset(0);
 			
 			data.setSystemData(systemData);
 			m.put(groupid, data);
