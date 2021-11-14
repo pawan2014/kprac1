@@ -24,11 +24,8 @@ public class MessageProducer {
 	private String topic;
 
 	public void sendMessage(String message) {
-		log.info("MESSAGE SENT FROM PRODUCER END -> " + message);
-		//customKafkaTemplate.send(topic, message);
 
 		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic, message);
-
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
 			public void onSuccess(SendResult<String, String> result) {

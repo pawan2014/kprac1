@@ -41,8 +41,8 @@ public class StreamConfig {
 	public KStream<String, String> kStream(StreamsBuilder kStreamBuilder) {
 		KStream<String, String> stream = kStreamBuilder.stream(topicName);
 		stream.foreach((key, value) -> {
-			System.out.println("================");
-			System.out.println(value);
+			//System.out.println("================");
+			//System.out.println(value);
 		});
 
 		final Serde<String> stringSerde = Serdes.String();
