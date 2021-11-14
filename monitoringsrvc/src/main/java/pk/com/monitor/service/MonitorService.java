@@ -12,21 +12,21 @@ public class MonitorService {
 
     HashMap<String, MonitorMetaData> m = new HashMap();
 
-    public MonitorMetaData update(String groupid, String systemName, String topic, String partition, long startOffset, long endOffset) {
+    public MonitorMetaData update(String groupid, String systemName, String topic, String partition, long offset) {
         MonitorMetaData data = null;
         if (m.containsKey(groupid)) {
             // only update the end offset
             data = m.get(groupid);
-            data.updateEndOffset(systemName, partition, endOffset);
+            data.updateEndOffset(systemName, partition,offset);
             m.put(groupid, data);
         } else {
 
             PartitionData partitionData = new PartitionData();
             partitionData.setPartitionName(partition);
-            partitionData.setCurrentOffset(startOffset);
+            partitionData.setStartOffset(offset);
             //
             SystemData systemData = new SystemData();
-            systemData.setSystemName(systemName);
+            systemData.setSystemName(topic);
             systemData.setTopicName(topic);
             systemData.getPartitionDataList().add(partitionData);
             // add as a new entry

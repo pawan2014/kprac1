@@ -21,13 +21,15 @@ public class MessageProducer {
 	@Value("${myapp.kafka.topic}")
 	private String topic;
 
-	public void sendMessage(String message) {
+	public void sendMessage(String key,String message) {
 
-		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic, message);
+		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic,key, message);
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
 			public void onSuccess(SendResult<String, String> result) {
-				log.info("Sent message: " + message + " with offset: " + result.getRecordMetadata().offset());
+				log.info("Sent topic#{}, P#{} offset#{} ",result.getRecordMetadata().topic(),
+						result.getRecordMetadata().partition(),
+						result.getRecordMetadata().offset());
 			}
 
 			@Override

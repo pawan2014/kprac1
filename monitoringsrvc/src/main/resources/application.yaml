@@ -15,4 +15,4 @@ spring:
         
 myapp:
     kafka:
-      topic: myKafkaTest
+      topic: MY-TEST-TOPIC_1

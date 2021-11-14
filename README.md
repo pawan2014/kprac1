@@ -26,3 +26,8 @@ http://localhost:9090/monitor/
 ### Monitoring service 
 Will get the offset data and will also be called by core consumer for updating the current offset processed
 Expose a API to be called by core consumer to update the last offset
+
+```
+bin/kafka-topics.sh --create --topic MY-TEST-TOPIC_1 --bootstrap-server localhost:9092 --replication-factor 1 --partitions 5
+
+```

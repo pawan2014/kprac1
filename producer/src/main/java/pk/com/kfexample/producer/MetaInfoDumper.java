@@ -14,8 +14,9 @@ public class MetaInfoDumper {
 
 	@Scheduled(fixedRate = 1000)
 	public void produceData() {
-		producer.sendMessage("grp1;SYS1;" + UUID.randomUUID().toString());
-		// System.out.println("Fixed Rate scheduler:: " + msrv.getMetadata());
+		String[] names = { "Terminator", "Slicer","Ninja", "cow", "Robot", "littlegirl" };
+		String name = names[(int) (Math.random() * names.length)];
+		producer.sendMessage(name,"grp1;SYS1;" + UUID.randomUUID().toString());
 	}
 
 }

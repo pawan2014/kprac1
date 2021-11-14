@@ -21,9 +21,9 @@ public class KafkaRestController {
                                          @RequestParam("system") String system,
                                          @RequestParam(value = "topic", defaultValue = "test topic") String topic,
 										 @RequestParam(value = "partition") String partition,
-                                         @RequestParam("start") long startOffset,
-                                         @RequestParam("end") long endOffset) {
-        return ms.update(group, system,topic,partition, startOffset, endOffset);
+                                         @RequestParam("offset") long offset)
+                                         {
+        return ms.update(group, topic,topic,partition, offset);
 
     }
 
