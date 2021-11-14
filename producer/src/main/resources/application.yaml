@@ -1,0 +1,13 @@
+server:
+  port: 9093
+
+spring:
+  kafka:
+    producer1:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+             
+myapp:
+    kafka:
+      topic: myKafkaTest
