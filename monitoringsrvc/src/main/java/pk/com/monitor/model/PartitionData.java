@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
-
 public class PartitionData {
 	String partitionName;
 	private long startOffset;
@@ -19,5 +18,8 @@ public class PartitionData {
 			log.info("parition processing completed="+endOffset+"--"+currentOffset);
 			allRecProcessed=true;
 		}
+	}
+	public void setAllRecProcessed(boolean flag ){
+		allRecProcessed=flag;
 	}
 }

@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableKafka
-@EnableKafkaStreams 
+@EnableKafkaStreams
 @EnableScheduling
 public class Test {
 

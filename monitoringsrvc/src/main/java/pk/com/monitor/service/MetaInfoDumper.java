@@ -16,6 +16,11 @@ public class MetaInfoDumper {
 		System.out.println("Fixed Rate scheduler:: " + msrv.getMetadata());
 	}
 
-	
+	@Scheduled(fixedRate = 1000)
+	public void updateProgress() {
+		System.out.println("Updating progress...");
+		msrv.updateProgress();
+	}
+
 
 }

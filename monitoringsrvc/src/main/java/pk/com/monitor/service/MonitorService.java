@@ -1,8 +1,10 @@
 package pk.com.monitor.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Synchronized;
 import org.springframework.stereotype.Service;
 import pk.com.monitor.model.MonitorMetaData;
 import pk.com.monitor.model.PartitionData;
@@ -14,31 +16,50 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class MonitorService {
 
-    HashMap<String, MonitorMetaData> m = new HashMap();
+    Map<String, MonitorMetaData> monitorMetaData = null;
     Path path = Paths.get("/home/pk/wrkspace/kprac1/data.json");
-    MonitorMetaData monitorMetaData;
+    //Map<String, MonitorMetaData>  monitorMetaData;
     @PostConstruct
     public void init(){
         try {
             byte[] st = Files.readAllBytes(path);
             ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            monitorMetaData = mapper.readValue(st.toString(),MonitorMetaData.class);
+            monitorMetaData =  mapper.readValue(st, new TypeReference<Map<String, MonitorMetaData>>(){});
         } catch (IOException e) {
             e.printStackTrace();
+            // if file now found exception then start with a new hashmap. this should happen only once
+            monitorMetaData = new HashMap();
         }
+    }
+    public void updateProgress() {
+        monitorMetaData.forEach((k,v)->{
+            v.checkProgress();
+        });
+    }
+    public MonitorMetaData updateCurrentProcessedOffset(String groupid, String topic, String partition, long offset) {
+        MonitorMetaData data = null;
+        if (monitorMetaData.containsKey(groupid)) {
+            // only update the end offset
+            data = monitorMetaData.get(groupid);
+            data.updateCurrentOffset(topic, partition,offset);
+            monitorMetaData.put(groupid, data);
+            writeJsonConfig();
+        }
+        return data;
     }
 
     public MonitorMetaData update(String groupid, String systemName, String topic, String partition, long offset) {
         MonitorMetaData data = null;
-        if (m.containsKey(groupid)) {
+        if (monitorMetaData.containsKey(groupid)) {
             // only update the end offset
-            data = m.get(groupid);
+            data = monitorMetaData.get(groupid);
             data.updateEndOffset(systemName, partition,offset);
-            m.put(groupid, data);
+            monitorMetaData.put(groupid, data);
         } else {
 
             PartitionData partitionData = new PartitionData();
@@ -54,28 +75,33 @@ public class MonitorService {
             data.setGroupId(groupid);
             data.getSystemData().add(systemData);
 
-            m.put(groupid, data);
+            monitorMetaData.put(groupid, data);
         }
 
-        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        String user = null;
-        try {
-            user = mapper.writeValueAsString(m);
-
-            Files.write(path,user.getBytes());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(user);
+        writeJsonConfig();
+        // System.out.println(metaDataJson);
 
         return data;
 
     }
 
-    public HashMap<String, MonitorMetaData> getMetadata() {
-        return m;
+    // TODO Concurent thread class can happen, fix this in future
+    private void writeJsonConfig() {
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        String metaDataJson = null;
+        try {
+            metaDataJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(monitorMetaData);
+
+            Files.write(path,metaDataJson.getBytes());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map<String, MonitorMetaData> getMetadata() {
+        return monitorMetaData;
     }
 
 }

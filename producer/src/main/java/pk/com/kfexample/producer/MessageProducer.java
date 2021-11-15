@@ -21,9 +21,9 @@ public class MessageProducer {
 	@Value("${myapp.kafka.topic}")
 	private String topic;
 
-	public void sendMessage(String key,String message) {
+	public void sendMessage(String key,Integer pNumber,String message) {
 
-		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic,key, message);
+		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic,pNumber,key, message);
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
 			public void onSuccess(SendResult<String, String> result) {

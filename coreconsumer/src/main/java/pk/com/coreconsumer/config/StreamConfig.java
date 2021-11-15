@@ -29,7 +29,7 @@ public class StreamConfig {
 	 */
 	//@Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
 	public KafkaStreamsConfiguration kStreamsConfigs() {
-		return new KafkaStreamsConfiguration(Map.of(StreamsConfig.APPLICATION_ID_CONFIG, "testStreams",
+		return new KafkaStreamsConfiguration(Map.of(StreamsConfig.APPLICATION_ID_CONFIG, "CoreStreamID",
 				StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092", StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG,
 				Serdes.String().getClass().getName(), StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG,
 				Serdes.String().getClass().getName(), StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG,
@@ -44,6 +44,7 @@ public class StreamConfig {
 			//System.out.println(value);
 		});
 
+/*
 		final Serde<String> stringSerde = Serdes.String();
 		KTable<String, Long> wordCounts = stream.groupBy((key, value) -> value, Grouped.with(stringSerde, stringSerde))
 				.count();
@@ -52,6 +53,10 @@ public class StreamConfig {
 			System.out.println("Count:"+key+"-"+value);
 		});
 		// stream.print(Printed.toSysOut());
+
+ */
 		return stream;
+
+
 	}
 }

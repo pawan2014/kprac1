@@ -11,7 +11,7 @@ Branches
 REST API Calls
 
 ```
-http://localhost:9090/send?msg=test5;POC1;Message2
+http://localhost:9091/monitor/service?group=1&system=SC1&topic=testtopic&partition=0&start=1&end=0
 
 where test5 is group and POC1 is the system name
 ```
@@ -29,5 +29,11 @@ Expose a API to be called by core consumer to update the last offset
 
 ```
 bin/kafka-topics.sh --create --topic MY-TEST-TOPIC_1 --bootstrap-server localhost:9092 --replication-factor 1 --partitions 5
+
+```
+## ES6
+```
+Update current offset
+http://localhost:9091/monitor/currentOffset/update?group=FORNOW-HARDCODED&topic=MY-TEST-TOPIC_1&partition=0&offset=1
 
 ```

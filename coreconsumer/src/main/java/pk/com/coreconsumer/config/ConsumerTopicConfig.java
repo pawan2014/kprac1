@@ -24,7 +24,7 @@ public class ConsumerTopicConfig {
 	@Value(value = "${myapp.kafka.topic}")
 	private String topicName;
 
-	private String groupId = "pk-cc";
+	private String groupId = "grp-pk-cc";
 
 	@Bean
 	public ConsumerFactory<String, String> consumerFactory() {
@@ -34,7 +34,6 @@ public class ConsumerTopicConfig {
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		// props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 		props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "2");
 		return new DefaultKafkaConsumerFactory<>(props);
 	}
@@ -44,8 +43,7 @@ public class ConsumerTopicConfig {
 		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory());
 		//factory.setConcurrency(3);
-		
-		factory.setBatchListener(true); 
+		factory.setBatchListener(true);
 		return factory;
 	}
 

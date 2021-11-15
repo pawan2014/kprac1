@@ -71,7 +71,6 @@ public class MessageConsumer {
             }
 
         }
-        log.info("end of batch receive");
     }
 
 }

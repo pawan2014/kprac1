@@ -8,6 +8,7 @@ import pk.com.monitor.model.MonitorMetaData;
 import pk.com.monitor.service.MonitorService;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class KafkaRestController {
@@ -29,10 +30,22 @@ public class KafkaRestController {
 
     // Get All metadata
     @GetMapping("/monitor")
-    public HashMap<String, MonitorMetaData> monitorUpdate() {
+    public Map<String, MonitorMetaData> monitorUpdate() {
         return ms.getMetadata();
 
     }
+
+    @GetMapping("/monitor/currentOffset/update")
+    public MonitorMetaData updateCurrentOffset(@RequestParam("group") String group,
+                                         @RequestParam(value = "topic", defaultValue = "test topic") String topic,
+                                         @RequestParam(value = "partition") String partition,
+                                         @RequestParam("offset") long offset)
+    {
+        return ms.updateCurrentProcessedOffset(group,topic,partition, offset);
+
+    }
+
+
 
 
 }

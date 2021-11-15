@@ -44,6 +44,8 @@ public class StreamConfig {
 			//System.out.println(value);
 		});
 
+		/*
+		Commented for now as this is of no used in this testing
 		final Serde<String> stringSerde = Serdes.String();
 		KTable<String, Long> wordCounts = stream.groupBy((key, value) -> value, Grouped.with(stringSerde, stringSerde))
 				.count();
@@ -52,7 +54,7 @@ public class StreamConfig {
 			System.out.println("Count:"+key+"-"+value);
 		});
 		// stream.print(Printed.toSysOut());
-
+		*/
 		return stream;
 	}
 }

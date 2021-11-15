@@ -6,7 +6,8 @@ Branches
 - EX2	
 - EX3
 - EX4
-- EX5	make producer a separate service, consumer a separate project and Monitoring service as a separate project 
+- EX5	make producer a separate service, consumer a separate project and Monitoring service as a separate project
+- EX6   taking only 1 item in batch?
 
 REST API Calls
 

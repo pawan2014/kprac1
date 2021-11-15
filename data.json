@@ -1,1 +1,40 @@
-{"FORNOW-HARDCODED":{"groupId":"FORNOW-HARDCODED","systemData":[{"systemName":"MY-TEST-TOPIC_1","topicName":"MY-TEST-TOPIC_1","partitionDataList":[{"partitionName":"3","startOffset":51,"endOffset":53,"currentOffset":0,"allRecProcessed":false},{"partitionName":"4","startOffset":197,"endOffset":209,"currentOffset":0,"allRecProcessed":false},{"partitionName":"2","startOffset":42,"endOffset":44,"currentOffset":0,"allRecProcessed":false}]}]}}
+{
+  "FORNOW-HARDCODED" : {
+    "groupId" : "FORNOW-HARDCODED",
+    "systemData" : [ {
+      "systemName" : "MY-TEST-TOPIC_1",
+      "topicName" : "MY-TEST-TOPIC_1",
+      "partitionDataList" : [ {
+        "partitionName" : "3",
+        "startOffset" : 864,
+        "endOffset" : 900,
+        "currentOffset" : 895,
+        "allRecProcessed" : false
+      }, {
+        "partitionName" : "4",
+        "startOffset" : 901,
+        "endOffset" : 942,
+        "currentOffset" : 939,
+        "allRecProcessed" : false
+      }, {
+        "partitionName" : "1",
+        "startOffset" : 786,
+        "endOffset" : 832,
+        "currentOffset" : 802,
+        "allRecProcessed" : false
+      }, {
+        "partitionName" : "2",
+        "startOffset" : 804,
+        "endOffset" : 841,
+        "currentOffset" : 0,
+        "allRecProcessed" : false
+      }, {
+        "partitionName" : "0",
+        "startOffset" : 851,
+        "endOffset" : 888,
+        "currentOffset" : 0,
+        "allRecProcessed" : false
+      } ]
+    } ]
+  }
+}
