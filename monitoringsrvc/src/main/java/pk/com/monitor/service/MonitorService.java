@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Synchronized;
 import org.springframework.stereotype.Service;
 import pk.com.monitor.model.MonitorMetaData;
 import pk.com.monitor.model.PartitionData;
@@ -17,70 +16,103 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class MonitorService {
+    public static final String GROUP_ID = "FORNOW-HARDCODED";
+    public static final String MY_BL = "MY_BL";
 
-    Map<String, MonitorMetaData> monitorMetaData = null;
+    Map<String, MonitorMetaData> metaDataMap = null;
     Path path = Paths.get("/home/pk/wrkspace/kprac1/data.json");
-    //Map<String, MonitorMetaData>  monitorMetaData;
+
+
     @PostConstruct
-    public void init(){
+    public void init() {
         try {
             byte[] st = Files.readAllBytes(path);
             ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            monitorMetaData =  mapper.readValue(st, new TypeReference<Map<String, MonitorMetaData>>(){});
+            metaDataMap = mapper.readValue(st, new TypeReference<Map<String, MonitorMetaData>>() {
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
             // if file now found exception then start with a new hashmap. this should happen only once
-            monitorMetaData = new HashMap();
+            metaDataMap = new HashMap();
+            metaDataMap.put(GROUP_ID, seedWithDummySystemName());
         }
     }
+
+    private MonitorMetaData seedWithDummySystemName() {
+        SystemData systemData = new SystemData();
+        systemData.setSystemName(MY_BL);
+        systemData.setTopicName(MY_BL);
+        systemData.setEndOfDay(false);
+        systemData.setLocked(true);
+
+        // add as a new entry
+        MonitorMetaData data = new MonitorMetaData();
+        data.setGroupId(GROUP_ID);
+        data.getSystemData().add(systemData);
+
+        return data;
+    }
+
     public void updateProgress() {
-        monitorMetaData.forEach((k,v)->{
+        metaDataMap.forEach((k, v) -> {
             v.checkProgress();
         });
     }
+
+    public void updateSystemEOD(String groupId, String systemName, boolean flag) {
+        if (metaDataMap.containsKey(groupId)) {
+            MonitorMetaData metaData = metaDataMap.get(groupId);
+            metaData.getSystemData().stream().forEach(p -> {
+                if (p.getSystemName().equalsIgnoreCase(systemName)) {
+                    p.setEndOfDay(flag);
+                }
+            });
+
+        } else {
+            System.out.println("No group found");
+        }
+    }
+
     public MonitorMetaData updateCurrentProcessedOffset(String groupid, String topic, String partition, long offset) {
         MonitorMetaData data = null;
-        if (monitorMetaData.containsKey(groupid)) {
+        if (metaDataMap.containsKey(groupid)) {
             // only update the end offset
-            data = monitorMetaData.get(groupid);
-            data.updateCurrentOffset(topic, partition,offset);
-            monitorMetaData.put(groupid, data);
+            data = metaDataMap.get(groupid);
+            data.updateCurrentOffset(topic, partition, offset);
+            metaDataMap.put(groupid, data);
             writeJsonConfig();
         }
         return data;
     }
 
-    public MonitorMetaData update(String groupid, String systemName, String topic, String partition, long offset) {
+    public MonitorMetaData createMetaNode(String groupid, String systemName, String topic, String partition, long offset) {
         MonitorMetaData data = null;
-        if (monitorMetaData.containsKey(groupid)) {
-            // only update the end offset
-            data = monitorMetaData.get(groupid);
-            data.updateEndOffset(systemName, partition,offset);
-            monitorMetaData.put(groupid, data);
-        } else {
+        if (metaDataMap.containsKey(groupid)) {
+            data = metaDataMap.get(groupid);
+            Optional<SystemData> s = data.getSystemData().stream().filter(p -> p.getSystemName().equalsIgnoreCase(systemName)).findFirst();
+            if (s.isPresent()) {
+                data.updateEndOffset(systemName, partition, offset);
+            } else {
+                PartitionData partitionData = new PartitionData();
+                partitionData.setPartitionName(partition);
+                partitionData.setStartOffset(offset);
+                //
+                SystemData systemData = new SystemData();
+                systemData.setSystemName(topic);
+                systemData.setTopicName(topic);
+                systemData.getPartitionDataList().add(partitionData);
 
-            PartitionData partitionData = new PartitionData();
-            partitionData.setPartitionName(partition);
-            partitionData.setStartOffset(offset);
-            //
-            SystemData systemData = new SystemData();
-            systemData.setSystemName(topic);
-            systemData.setTopicName(topic);
-            systemData.getPartitionDataList().add(partitionData);
-            // add as a new entry
-            data = new MonitorMetaData();
-            data.setGroupId(groupid);
-            data.getSystemData().add(systemData);
+                data.getSystemData().add(systemData);
 
-            monitorMetaData.put(groupid, data);
+            }
+            metaDataMap.put(groupid, data);
+            writeJsonConfig();
         }
-
-        writeJsonConfig();
-        // System.out.println(metaDataJson);
-
         return data;
 
     }
@@ -90,9 +122,9 @@ public class MonitorService {
         ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String metaDataJson = null;
         try {
-            metaDataJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(monitorMetaData);
+            metaDataJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(metaDataMap);
 
-            Files.write(path,metaDataJson.getBytes());
+            Files.write(path, metaDataJson.getBytes());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -101,7 +133,7 @@ public class MonitorService {
     }
 
     public Map<String, MonitorMetaData> getMetadata() {
-        return monitorMetaData;
+        return metaDataMap;
     }
 
 }

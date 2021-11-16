@@ -35,7 +35,7 @@ public class MonitorMetaData {
                 // given consumer is slow this condition should be met
                 if (p.getEndOffset() == p.getCurrentOffset()) {
                     p.setAllRecProcessed(true);
-                }else{
+                } else {
                     // this is in case producer is still producing and consumer is very fast
                     p.setAllRecProcessed(false);
                 }
@@ -43,10 +43,12 @@ public class MonitorMetaData {
             // set the overall system level process done as  true
             long totalCount = s.getPartitionDataList().stream().count();
             long processedCount = s.getPartitionDataList().stream().filter(p -> p.isAllRecProcessed()).count();
-            if (totalCount == processedCount) {
-                s.setEndOfDay(true);
-            }else{
-                s.setEndOfDay(false);
+            if (!s.isLocked()) {
+                if (totalCount == processedCount) {
+                    s.setEndOfDay(true);
+                } else {
+                    s.setEndOfDay(false);
+                }
             }
         });
     }
@@ -89,6 +91,27 @@ public class MonitorMetaData {
             log.info("No System found with  name {}. will add it", topicName);
             // add System
         }
+    }
+
+    /**
+     * just a placeholder method
+     * @param data
+     */
+    //TODO  see if this is needed for future
+    public void createNode(MonitorMetaData data){
+
+        PartitionData partitionData = new PartitionData();
+        partitionData.setPartitionName("");
+        partitionData.setStartOffset(1);
+        //
+        SystemData systemData = new SystemData();
+        systemData.setSystemName("");
+        systemData.setTopicName("");
+        systemData.getPartitionDataList().add(partitionData);
+        // add as a new entry
+        data = new MonitorMetaData();
+        data.setGroupId("");
+        data.getSystemData().add(systemData);
     }
 
 

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pk.com.monitor.model.MonitorMetaData;
 import pk.com.monitor.service.MonitorService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -24,7 +23,7 @@ public class KafkaRestController {
 										 @RequestParam(value = "partition") String partition,
                                          @RequestParam("offset") long offset)
                                          {
-        return ms.update(group, topic,topic,partition, offset);
+        return ms.createMetaNode(group, topic,topic,partition, offset);
 
     }
 

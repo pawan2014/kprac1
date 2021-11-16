@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import pk.com.monitor.service.MonitorService;
 
+
 import java.util.List;
 
 /**
@@ -61,7 +62,7 @@ public class MessageConsumer {
         log.info("start of batch receive=" + data.size());
         for (int i = 0; i < data.size(); i++) {
             log.info("Got Message Topic#{},P#{},Offset#{}", topics.get(i), partitions.get(i), offsets.get(i));
-            mserv.update("FORNOW-HARDCODED", topics.get(i), topics.get(i), partitions.get(i).toString(), offsets.get(i));
+            mserv.createMetaNode(MonitorService.GROUP_ID, topics.get(i), topics.get(i), partitions.get(i).toString(), offsets.get(i));
             try {
                 // induce some delays
                 Thread.sleep(50);
