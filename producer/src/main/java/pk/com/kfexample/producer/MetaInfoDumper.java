@@ -15,14 +15,15 @@ public class MetaInfoDumper {
 	@Scheduled(fixedRate = 1000)
 	public void produceData() {
 
-		String[] names = { "Terminator", "Slicer","Ninja", "cow", "Robot"};
-		int[] parNumber = { 0,1,2,3,4,5};
+		String[] names = { "Aerminator", "BSlicer","CNinja", "Dcow", "LOI","POP","SAM","GOL","MOL"
+				,"POL","DHOL","BACK","love","santa","khat","join","party"};
+		//int[] parNumber = { 0,1,2,3,4,5};
 		double randomNumberTo5 = (Math.random() * names.length);
 
 		String name = names[(int) randomNumberTo5];
-		int pNumber = parNumber[(int) randomNumberTo5];
+		//int pNumber = parNumber[(int) randomNumberTo5];
 
-		producer.sendMessage(name,pNumber,"grp1;SYS1;" + UUID.randomUUID().toString());
+		producer.sendMessage(name,0,"grp1;SYS1;" + UUID.randomUUID().toString());
 	}
 
 }

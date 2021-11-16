@@ -10,10 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableKafka
 @EnableKafkaStreams
 @EnableScheduling
-public class Test {
+public class MonitoringService {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Test.class, args);
+		SpringApplication.run(MonitoringService.class, args);
 	}
 
 }

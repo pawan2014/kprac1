@@ -69,7 +69,7 @@ public class MessageConsumer {
 			updateRecordSet(partitions.get(i),offsets.get(i));
 			try {
 				// induce some delays
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

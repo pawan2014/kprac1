@@ -23,7 +23,7 @@ public class MessageProducer {
 
 	public void sendMessage(String key,Integer pNumber,String message) {
 
-		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic,pNumber,key, message);
+		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic,key, message);
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
 			public void onSuccess(SendResult<String, String> result) {

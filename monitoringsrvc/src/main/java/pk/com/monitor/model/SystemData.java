@@ -14,6 +14,7 @@ import java.util.List;
 public class SystemData {
 	private String systemName;
 	private String topicName;
+	private boolean endOfDay;
 	List<PartitionData> partitionDataList= new ArrayList<>();
 
 

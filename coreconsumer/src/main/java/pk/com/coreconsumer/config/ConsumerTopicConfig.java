@@ -34,7 +34,7 @@ public class ConsumerTopicConfig {
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "2");
+		props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "5");
 		return new DefaultKafkaConsumerFactory<>(props);
 	}
 

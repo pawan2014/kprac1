@@ -86,7 +86,7 @@ public class MonitorService {
     }
 
     // TODO Concurent thread class can happen, fix this in future
-    private void writeJsonConfig() {
+    synchronized private void writeJsonConfig() {
         ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String metaDataJson = null;
         try {
