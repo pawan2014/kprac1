@@ -19,7 +19,7 @@ public class MetaInfoDumper {
 	@Scheduled(fixedRate = 1000)
 	public void updateProgress() {
 		System.out.println("Updating progress...");
-		msrv.updateProgress();
+		msrv.calculateEOD();
 	}
 
 

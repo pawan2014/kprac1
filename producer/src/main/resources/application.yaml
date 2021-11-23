@@ -10,4 +10,4 @@ spring:
              
 myapp:
     kafka:
-      topic: MY-TEST-TOPIC_1
+      topic: MY-TEST-TOPIC_1,MY-TEST-TOPIC_2

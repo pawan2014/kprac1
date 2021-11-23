@@ -44,6 +44,16 @@ public class KafkaRestController {
 
     }
 
+    @GetMapping("/monitor/updateeod")
+    public Map<String, MonitorMetaData> updateSystemEOD(@RequestParam("group") String group,
+                                                        @RequestParam(value = "topic") String topic,
+                                                        @RequestParam(value = "eod") boolean eod
+                                               )
+    {
+        return ms.updateSystemEOD(group,topic,eod);
+
+    }
+
 
 
 

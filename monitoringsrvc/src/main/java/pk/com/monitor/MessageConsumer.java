@@ -49,9 +49,10 @@ public class MessageConsumer {
 		log.info("received = " + record.value() + " with key " + record.key() + " offset=" + record.offset()
 				+ " headers=" + record.headers());
 
+
 	}
 	*/
-    @KafkaListener(id = "batch-listener", topics = "${myapp.kafka.topic}", containerFactory = "customKafkaListenerContainerFactory")
+    @KafkaListener(id = "batch-listener", topics = "#{'${myapp.kafka.topic}'.split(',')}", containerFactory = "customKafkaListenerContainerFactory")
     public void receive(List<String> data,
                         @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) List<Integer> keys,
                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,

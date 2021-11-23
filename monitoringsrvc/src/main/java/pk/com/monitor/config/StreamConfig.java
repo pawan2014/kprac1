@@ -1,20 +1,21 @@
 package pk.com.monitor.config;
 
-import java.util.Map;
-
-import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.Grouped;
+import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.processor.Processor;
+import org.apache.kafka.streams.processor.ProcessorContext;
+import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.WallclockTimestampExtractor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
+
+import java.util.Map;
 
 @Configuration
 public class StreamConfig {
@@ -37,12 +38,48 @@ public class StreamConfig {
 	}
 
 	@Bean
-	public KStream<String, String> kStream(StreamsBuilder kStreamBuilder) {
-		KStream<String, String> stream = kStreamBuilder.stream(topicName);
+	public KStream<String, String> kStream2(StreamsBuilder kStreamBuilder) {
+
+		KStream<String, String> stream = kStreamBuilder.stream("MY-TEST-TOPIC_2");
 		stream.foreach((key, value) -> {
+			System.out.println("**"+value);
+		});
+	return  stream;
+	}
+	@Bean
+	public Topology kStream(StreamsBuilder kStreamBuilder) {
+		//KStream<String, String>
+		//KStream<String, String> stream = kStreamBuilder.stream(topicName);
+		//stream.foreach((key, value) -> {
 			//System.out.println("================");
 			//System.out.println(value);
-		});
+		//});
+
+		Topology topology = kStreamBuilder.build();
+		topology.addSource("SOURCE", topicName)
+				.addProcessor("PROCESS", new ProcessorSupplier() {
+					@Override
+					public Processor get() {
+						return new Processor() {
+							@Override
+							public void init(ProcessorContext context) {
+
+							}
+
+							@Override
+							public void process(Object key, Object value) {
+								System.out.println("inside the processor="+key+"===="+value);
+							}
+
+							@Override
+							public void close() {
+
+							}
+						};
+					}
+				},"SOURCE")
+				.addSink("SINK3", "MY-TEST-TOPIC_2", "PROCESS");
+
 
 		/*
 		Commented for now as this is of no used in this testing
@@ -55,6 +92,10 @@ public class StreamConfig {
 		});
 		// stream.print(Printed.toSysOut());
 		*/
-		return stream;
+		//return stream;
+		return topology;
+	}
+
+	private class ProcessorA {
 	}
 }

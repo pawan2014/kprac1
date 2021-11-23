@@ -21,8 +21,8 @@ public class ConsumerTopicConfig {
 	@Value(value = "${spring.kafka.producer1.bootstrap-servers}")
 	private String bootstrapAddress;
 
-	@Value(value = "${myapp.kafka.topic}")
-	private String topicName;
+	/*@Value(value = "${myapp.kafka.topic}")
+	private String topicName;*/
 
 	private String groupId = "BATCH-GRP";
 

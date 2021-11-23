@@ -21,7 +21,10 @@ import java.util.Optional;
 @Service
 public class MonitorService {
     public static final String GROUP_ID = "FORNOW-HARDCODED";
-    public static final String MY_BL = "MY_BL";
+    public static final String MY_S1 = "MY_BL";
+    public static final String MY_S2 = "MY-TEST-TOPIC_1";
+    public static final String MY_S3 = "MY-TEST-TOPIC_2";
+
 
     Map<String, MonitorMetaData> metaDataMap = null;
     Path path = Paths.get("/home/pk/wrkspace/kprac1/data.json");
@@ -45,8 +48,8 @@ public class MonitorService {
 
     private MonitorMetaData seedWithDummySystemName() {
         SystemData systemData = new SystemData();
-        systemData.setSystemName(MY_BL);
-        systemData.setTopicName(MY_BL);
+        systemData.setSystemName(MY_S1);
+        systemData.setTopicName(MY_S1);
         systemData.setEndOfDay(false);
         systemData.setLocked(true);
 
@@ -58,13 +61,41 @@ public class MonitorService {
         return data;
     }
 
-    public void updateProgress() {
-        metaDataMap.forEach((k, v) -> {
-            v.checkProgress();
-        });
+    public void calculateEOD() {
+        updateS2(metaDataMap);
+        writeJsonConfig();
+    }
+    synchronized public void updateS2(Map<String, MonitorMetaData> metaDataMap) {
+        MonitorMetaData  blMeta = metaDataMap.get(GROUP_ID);
+        Optional<SystemData> s2SystemData = blMeta.getSystemData().stream().filter(p->p.getSystemName().equalsIgnoreCase(MY_S2)).findFirst();
+        if(s2SystemData.isPresent()){
+            SystemData  data = s2SystemData.get();
+            data.getPartitionDataList().stream().forEach(p->{
+                // for that system check all parition and set flag
+                if (p.getEndOffset() == p.getCurrentOffset()) {
+                    p.setAllRecProcessed(true);
+                } else {
+                    // this is in case producer is still producing and consumer is very fast
+                    p.setAllRecProcessed(false);
+                }
+            });
+            // Mark only is S1 is EOD
+            Optional<SystemData> s1SystemData = blMeta.getSystemData().stream().filter(p->p.getSystemName().equalsIgnoreCase(MY_S1)).findFirst();
+            long totalCount = data.getPartitionDataList().stream().count();
+            long processedCount = data.getPartitionDataList().stream().filter(p -> p.isAllRecProcessed()).count();
+            if (totalCount == processedCount && s1SystemData.get().isEndOfDay()) {
+                data.setEndOfDay(true);
+            } else {
+                //data.setEndOfDay(false);
+            }
+        }
+
+
+
+
     }
 
-    public void updateSystemEOD(String groupId, String systemName, boolean flag) {
+    public Map<String, MonitorMetaData> updateSystemEOD(String groupId, String systemName, boolean flag) {
         if (metaDataMap.containsKey(groupId)) {
             MonitorMetaData metaData = metaDataMap.get(groupId);
             metaData.getSystemData().stream().forEach(p -> {
@@ -72,10 +103,12 @@ public class MonitorService {
                     p.setEndOfDay(flag);
                 }
             });
-
+            writeJsonConfig();
         } else {
             System.out.println("No group found");
         }
+
+        return metaDataMap;
     }
 
     public MonitorMetaData updateCurrentProcessedOffset(String groupid, String topic, String partition, long offset) {

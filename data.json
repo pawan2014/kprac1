@@ -4,37 +4,31 @@
     "systemData" : [ {
       "systemName" : "MY_BL",
       "topicName" : "MY_BL",
-      "endOfDay" : false,
+      "endOfDay" : true,
       "locked" : true,
       "partitionDataList" : [ ]
     }, {
-      "systemName" : "MY-TEST-TOPIC_1",
-      "topicName" : "MY-TEST-TOPIC_1",
+      "systemName" : "MY-TEST-TOPIC_2",
+      "topicName" : "MY-TEST-TOPIC_2",
       "endOfDay" : false,
       "locked" : false,
       "partitionDataList" : [ {
-        "partitionName" : "3",
-        "startOffset" : 115,
-        "endOffset" : 166,
-        "currentOffset" : 166,
-        "allRecProcessed" : true
-      }, {
-        "partitionName" : "1",
-        "startOffset" : 92,
-        "endOffset" : 150,
-        "currentOffset" : 150,
-        "allRecProcessed" : true
-      }, {
-        "partitionName" : "2",
-        "startOffset" : 50,
-        "endOffset" : 61,
-        "currentOffset" : 61,
-        "allRecProcessed" : true
-      }, {
         "partitionName" : "0",
-        "startOffset" : 205,
-        "endOffset" : 286,
-        "currentOffset" : 286,
+        "startOffset" : 0,
+        "endOffset" : 111,
+        "currentOffset" : 0,
+        "allRecProcessed" : false
+      } ]
+    }, {
+      "systemName" : "MY-TEST-TOPIC_1",
+      "topicName" : "MY-TEST-TOPIC_1",
+      "endOfDay" : true,
+      "locked" : false,
+      "partitionDataList" : [ {
+        "partitionName" : "0",
+        "startOffset" : 76,
+        "endOffset" : 21,
+        "currentOffset" : 201,
         "allRecProcessed" : false
       } ]
     } ]

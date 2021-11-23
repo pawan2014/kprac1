@@ -45,6 +45,11 @@ http://localhost:9091/monitor/currentOffset/update?group=FORNOW-HARDCODED&topic=
 ```
 ## EX6
 
+## EX7
+```
+http://localhost:9091/monitor/updateeod?group=FORNOW-HARDCODED&topic=MY_BL&eod=true
+```
+
 
 ## Common Problems
 - Error "Topic MY-TEST-TOPIC_1 not present in metadata after 60000 ms." Comes when you are tring to send data to partition which does't exists for that topic. like sending to 3 partition but in actual there is only one parition. This issue i am seeing next day when i try to run the producer. Need to check more

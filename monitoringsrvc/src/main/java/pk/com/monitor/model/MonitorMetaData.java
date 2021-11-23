@@ -28,30 +28,7 @@ public class MonitorMetaData {
     private String groupId;
     private List<SystemData> systemData = new ArrayList<>();
 
-    synchronized public void checkProgress() {
-        // set the parition process done as  true
-        systemData.stream().forEach(s -> {
-            s.getPartitionDataList().forEach(p -> {
-                // given consumer is slow this condition should be met
-                if (p.getEndOffset() == p.getCurrentOffset()) {
-                    p.setAllRecProcessed(true);
-                } else {
-                    // this is in case producer is still producing and consumer is very fast
-                    p.setAllRecProcessed(false);
-                }
-            });
-            // set the overall system level process done as  true
-            long totalCount = s.getPartitionDataList().stream().count();
-            long processedCount = s.getPartitionDataList().stream().filter(p -> p.isAllRecProcessed()).count();
-            if (!s.isLocked()) {
-                if (totalCount == processedCount) {
-                    s.setEndOfDay(true);
-                } else {
-                    s.setEndOfDay(false);
-                }
-            }
-        });
-    }
+
 
     public void updateCurrentOffset(String topicName, String partition, long endOffset) {
         Optional<SystemData> st = systemData.stream().filter(data -> data.getTopicName().equalsIgnoreCase(topicName)).findFirst();

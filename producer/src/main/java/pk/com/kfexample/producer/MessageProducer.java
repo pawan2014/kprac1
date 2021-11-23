@@ -18,12 +18,16 @@ public class MessageProducer {
 	@Autowired
 	private KafkaTemplate<String, String> customKafkaTemplate;
 
-	@Value("${myapp.kafka.topic}")
-	private String topic;
+	@Value("#{'${myapp.kafka.topic}'.split(',')}")
+	private String[] topic;
 
 	public void sendMessage(String key,Integer pNumber,String message) {
+		sendMessage1(topic[0],key, message);
+		sendMessage1(topic[1],key, message);
+	}
 
-		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic,key, message);
+	private void sendMessage1(String topic , String key, String message) {
+		ListenableFuture<SendResult<String, String>> future = this.customKafkaTemplate.send(topic, key, message);
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
 			public void onSuccess(SendResult<String, String> result) {
