@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.UUID;
 
 @Component
 
@@ -23,6 +26,10 @@ public class MessageProducer {
 	@Value("${myapp.kafka.topic}")
 	private String topic;
 
+	@Scheduled(fixedDelay =1000)
+	public void sendMessage(){
+		sendMessage("TEST"+ UUID.randomUUID());
+	}
 	public void sendMessage(String message) {
 		log.info("MESSAGE SENT FROM PRODUCER END -> " + message);
 		//customKafkaTemplate.send(topic, message);
