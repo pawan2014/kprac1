@@ -5,23 +5,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.UUID;
 
 @Component
 
 public class MessageProducer {
-	private Logger log = LoggerFactory.getLogger(MessageProducer.class);
+    private Logger log = LoggerFactory.getLogger(MessageProducer.class);
 
-	@Autowired
-	private KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
-	@Value("${myapp.kafka.topic}")
-	private String topic;
+    @Value("${myapp.kafka.topic}")
+    private String topic;
 
-	public void sendMessage(String message) {
-		log.info("MESSAGE SENT FROM PRODUCER END -> " + message);
-		kafkaTemplate.send(topic, message);
-	}
+    public void sendMessage(String message) {
+        //log.info("MESSAGE SENT FROM PRODUCER END -> " + message);
+        kafkaTemplate.send(topic, message);
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public void sendMessage() {
+        sendMessage(UUID.randomUUID().toString());
+    }
 }

@@ -1,5 +1,6 @@
 package pk.com.kfexample.kfkalearn;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -18,20 +19,17 @@ public class MessageConsumer {
     @KafkaListener(id = "DYNA-LST", topics = "${myapp.kafka.topic}", groupId = "ex9-0", autoStartup = "false")
     public void consume(String message) {
         log.info("MESSAGE recieved -> " + message);
-        // messageRepo.addMessage(message);
     }
 
     @KafkaListener(id = "NONDYNA-LST", topics = "${myapp.kafka.topic}", groupId = "ex9-1")
-    public void consume2(String message) {
-        log.info("MESSAGE recieved -> " + message);
-        // messageRepo.addMessage(message);
+    public void listen(ConsumerRecord<?, ?> record) {
+        log.info("MESSAGE received on-> " + record.partition() + " at offset=" + record.offset());
     }
 
     @EventListener(condition = "event.listenerId.startsWith('NONDYNA-LST')")
     public void idleEventHandler(ListenerContainerIdleEvent event) {
-
         log.info("Idle Event Handler received message @ :: " + ts);
-        log.info("Idle Event Handler received message @ :: " + LocalDateTime.now().isAfter(ts));
+        //log.info("Idle Event Handler received message @ :: " + LocalDateTime.now().isAfter(ts));
     }
 
 }
