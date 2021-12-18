@@ -9,6 +9,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.processor.Processor;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.streams.processor.WallclockTimestampExtractor;
@@ -133,16 +134,17 @@ public class KConfig {
                 WallclockTimestampExtractor.class.getName()));
     }
 
-    /*@Bean
+
+    @Bean
     public KStream<String, String> kStream(StreamsBuilder kStreamBuilder) {
-        KStream<String, String> stream = kStreamBuilder.stream(topicIncomming);
+        KStream<String, String> stream = kStreamBuilder.stream("MY-TEST-TOPIC_1");
         stream.foreach((key, value) -> {
-            System.out.printf("Key=%s,Value=%s\n", key, value);
+            System.out.printf("\n MY-TEST-TOPIC_1 = Key=%s,Value=%s\n", key, value);
         });
 
         //stream.print(Printed.toSysOut());
         return stream;
-    }*/
+    }
 
 
 }

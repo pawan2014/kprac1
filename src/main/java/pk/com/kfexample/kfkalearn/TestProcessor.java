@@ -24,6 +24,7 @@ public class TestProcessor implements Processor<String, String> {
     @Override
     public void process(String key, String value) {
         System.out.printf("\ntask id%s, offset=%s, par=%s, %s", context.taskId(), context.offset(), context.partition(), value);
+        context.forward("key", value);
     }
 
     @Override
