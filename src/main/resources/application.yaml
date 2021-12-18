@@ -2,17 +2,19 @@ server:
   port: 9090
 
 spring:
+  application:
+    name: pk-stream-app
   kafka:
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-                  
+
     consumer:
       bootstrap-servers: localhost:9092
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-        
+
 myapp:
-    kafka:
-      topic: myKafkaTest
+  kafka:
+    topic: myKafkaTest
